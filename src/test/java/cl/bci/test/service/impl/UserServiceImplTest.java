@@ -35,14 +35,13 @@ class UserServiceImplTest {
 
     @Test
     void saveUser_ValidRequest_ReturnsCreatedResponse() {
-        // Arrange
-        UserRequestDTO userRequestDTO = new UserRequestDTO(/* set valid properties */);
+
         String authorizationHeader = "validAuthorizationHeader";
 
-        // Mocking the behavior of userRepository
+
         when(userRepository.save(any(User.class))).thenReturn(createMockUser());
 
-        // Act
+
         ResponseEntity<UserResponseDTO> responseEntity = userService.saveUser(
                 UserRequestDTO.builder()
                         .email("sasa@sasda.cl")
@@ -55,13 +54,9 @@ class UserServiceImplTest {
                                 .build()))
                 .build(), authorizationHeader);
 
-        // Assert
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
-        // Add more assertions based on the expected behavior
     }
-
-    // Add more test cases for error scenarios, edge cases, etc.
 
     private User createMockUser() {
         User user = new User();
@@ -72,7 +67,8 @@ class UserServiceImplTest {
         phone.setContrycode("1");
         phone.setNumber("123456789");
         user.setPhones(Collections.singletonList(phone));
-        // Set other properties as needed for a valid user
         return user;
     }
+
+
 }

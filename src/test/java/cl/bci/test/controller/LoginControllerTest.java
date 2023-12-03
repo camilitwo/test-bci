@@ -11,13 +11,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 class LoginControllerTest {
     @InjectMocks
@@ -48,7 +47,7 @@ class LoginControllerTest {
 
 
         assertNotNull(responseEntity);
-        assertEquals(200, responseEntity.getStatusCodeValue()); // Assuming HttpStatus.OK
+        assertEquals(200, responseEntity.getStatusCodeValue());
         assertNotNull(responseEntity.getBody());
         assertEquals("token", responseEntity.getBody().getToken());
     }

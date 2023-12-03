@@ -53,7 +53,7 @@ class UserControllerTest {
     @Test
     void saveUser_InvalidRequest_ReturnsBadRequest() {
 
-        UserRequestDTO userRequestDTO = new UserRequestDTO(/* set invalid properties */);
+        UserRequestDTO userRequestDTO = new UserRequestDTO();
         String authorizationHeader = "validAuthorizationHeader";
         when(userService.saveUser(Mockito.any(UserRequestDTO.class), Mockito.anyString()))
                 .thenReturn(new ResponseEntity<>(new UserResponseDTO(), HttpStatus.BAD_REQUEST));
