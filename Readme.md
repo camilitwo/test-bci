@@ -1,18 +1,15 @@
 # Spring Boot API de Registro de Usuarios
 
-![Java](https://img.shields.io/badge/Java-8%2B-brightgreen)
-![Maven](https://img.shields.io/badge/Maven-3%2B-blue)
-
 Esta es una simple API para registrar usuarios construida con Spring Boot e incluye Swagger UI para la prueba y documentación.
 
-## Prerrequisitos
-- Java 8 o superior
-- Maven
+## <u>Prerrequisitos</u>
+* ![Java](https://img.shields.io/badge/Java-8%2B-brightgreen)
+* ![Maven](https://img.shields.io/badge/Maven-3%2B-blue)
 
-## Documentación
+## <u>Documentación</u>
 La documentación de la API se encuentra [aquí](http://localhost:8080/swagger-ui/). Para generar la documentación en formato JSON, puedes descargarla [aquí](http://localhost:8080/v3/api-docs).
 
-## Ejecutando la API
+## <u>Ejecutando la API</u>
 1. Clona el [repositorio](https://github.com/camilitwo/test-bci):
     ```shell
     git clone https://github.com/camilitwo/test-bci.git
@@ -23,13 +20,13 @@ La documentación de la API se encuentra [aquí](http://localhost:8080/swagger-u
     mvn spring-boot:run
     ```
 
-## Probando la API
+## <u>Probando la API</u>
 Para probar la API, utiliza Swagger UI, disponible [aquí](http://localhost:8080/swagger-ui/). Desde allí, puedes ver una lista de endpoints finales disponibles y probarlos.
 
-## Endpoints finales
-- **POST /login:** Autentica un usuario y devuelve un token de acceso.
-- **POST /usuarios:** Crea un nuevo usuario.
-# /login
+## <u>Endpoints finales</u>
+> - **POST /login:** Autentica un usuario y devuelve un token de acceso.
+> - **POST /usuarios:** Crea un nuevo usuario.
+# <u>/login</u>
 ## Ejemplo de solicitud
 ####
 Aquí hay un ejemplo de solicitud POST para obtener un token de acceso:
@@ -54,7 +51,7 @@ curl --location 'http://localhost:8080/login' \
 }
 ```
 
-# /users
+# <u>/users</u>
 ## Ejemplo de solicitud
 ####
 Aquí hay un ejemplo de solicitud POST para guardar un usuario en la base de datos:
@@ -112,6 +109,16 @@ curl --location 'http://localhost:8080/users' \
 }
 ```
 
-**Proyecto realizado por Camilo Gonzalez**
+# <u>Script de base de datos</u>
+> Los scripts de base de datos los encuentras [acá](src/main/docs/Scripts.sql)
+
+# <u>Diagramas</u>
+
+> * Diagrama de componentes [aquí](src/main/docs/diagramas/Componentes.md)
+> * Diagrama de flujo [aquí](src/main/docs/diagramas/Flujo.md)
+> * Diagrama de Secuencia [aquí](src/main/docs/diagramas/Secuencia.md)
+
+
+Proyecto realizado por [<u>__Camilo Gonzalez__</u>](https://www.linkedin.com/in/camilo-gonzalez-villalobos-2ba062a4/)
 
 [![GitHub Profile](https://img.shields.io/badge/GitHub-camilitwo-green?style=flat&logo=github)](https://github.com/camilitwo)

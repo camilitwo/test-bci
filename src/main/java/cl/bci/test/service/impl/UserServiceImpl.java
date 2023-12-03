@@ -2,11 +2,13 @@ package cl.bci.test.service.impl;
 
 import cl.bci.test.dto.UserRequestDTO;
 import cl.bci.test.dto.UserResponseDTO;
+import cl.bci.test.exception.ProblemException;
 import cl.bci.test.model.Phone;
 import cl.bci.test.model.User;
 import cl.bci.test.repository.UserRepository;
 import cl.bci.test.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +29,24 @@ public class UserServiceImpl implements UserService {
         CompletableFuture<UserResponseDTO> userResponseDTOCompletableFuture = CompletableFuture
                 .supplyAsync(() -> buildUserFromRequest(userRequestDTO, authorizationHeader))
                 .thenApplyAsync(user -> {
+                    userExist(user);
                     User savedUser = userRepository.save(user);
                     UserResponseDTO responseDTO = new UserResponseDTO();
                     BeanUtils.copyProperties(savedUser, responseDTO);
                     return responseDTO;
+                })
+                .exceptionally(throwable -> {
+                    throw new ProblemException(throwable.getMessage());
                 });
 
         return new ResponseEntity<>(userResponseDTOCompletableFuture.join(), HttpStatus.CREATED);
+    }
+
+
+    private void userExist(User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new ProblemException("El correo ya está registrado");
+        }
     }
 
     private User buildUserFromRequest(UserRequestDTO userRequestDTO, String authorizationHeader) {

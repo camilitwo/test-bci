@@ -10,12 +10,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -45,5 +41,31 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<>(ProblemResponseDTO.builder()
                 .mensaje(ex.getMessage())
                 .build(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(CompletionException.class)
+    public ResponseEntity<Object> handleProblemException(CompletionException ex) {
+
+        if (ex.getCause() instanceof ProblemException) {
+            ProblemException problemException = (ProblemException) ex.getCause();
+            // rescatar solo el error
+            log.error(problemException.getMessage());
+            return new ResponseEntity<>(ProblemResponseDTO.builder()
+                    .mensaje("El correo ya se ecuentra registrado")
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+
+        if (ex.getCause() instanceof ExpiredJwtException) {
+            ExpiredJwtException expiredJwtException = (ExpiredJwtException) ex.getCause();
+            log.error(expiredJwtException.getMessage());
+            return new ResponseEntity<>(ProblemResponseDTO.builder()
+                    .mensaje(expiredJwtException.getMessage())
+                    .build(), HttpStatus.UNAUTHORIZED);
+        }
+
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ProblemResponseDTO.builder()
+                .mensaje(ex.getMessage())
+                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
