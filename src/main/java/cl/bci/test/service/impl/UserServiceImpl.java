@@ -12,10 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,24 +23,36 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     @Override
-    public ResponseEntity<UserResponseDTO> saveUser(UserRequestDTO userRequestDTO) {
-        User user = new User();
-        BeanUtils.copyProperties(userRequestDTO, user);
-        UserResponseDTO userResponseDTO = new UserResponseDTO();
-        Phone phone = new Phone();
-        userRequestDTO.getPhones().forEach(phoneDTO -> {
-            BeanUtils.copyProperties(phoneDTO, phone);
-            user.getPhones().add(phone);
-        });
-        BeanUtils.copyProperties(userRepository.save(user), userResponseDTO);
+    public ResponseEntity<UserResponseDTO> saveUser(UserRequestDTO userRequestDTO, String authorizationHeader) {
+        CompletableFuture<UserResponseDTO> userResponseDTOCompletableFuture = CompletableFuture
+                .supplyAsync(() -> buildUserFromRequest(userRequestDTO, authorizationHeader))
+                .thenApplyAsync(user -> {
+                    User savedUser = userRepository.save(user);
+                    UserResponseDTO responseDTO = new UserResponseDTO();
+                    BeanUtils.copyProperties(savedUser, responseDTO);
+                    return responseDTO;
+                });
 
-        return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(userResponseDTOCompletableFuture.join(), HttpStatus.CREATED);
     }
 
-    @Override
-    public List<UserResponseDTO> getUsers() {
-        List<UserResponseDTO> userResponseDTO = new ArrayList<>();
-        BeanUtils.copyProperties(userRepository.findAll(), userResponseDTO);
-        return userResponseDTO;
+    private User buildUserFromRequest(UserRequestDTO userRequestDTO, String authorizationHeader) {
+        User user = new User();
+        BeanUtils.copyProperties(userRequestDTO, user);
+
+        List<Phone> phones = userRequestDTO.getPhones().stream()
+                .map(phoneDTO -> {
+                    Phone phone = new Phone();
+                    BeanUtils.copyProperties(phoneDTO, phone);
+                    return phone;
+                })
+                .collect(Collectors.toList());
+
+        user.setPhones(phones);
+        user.setCreated(new Date());
+        user.setLastLogin(new Date());
+        user.setIsActive(true);
+        user.setToken(authorizationHeader.substring(7));
+        return user;
     }
 }

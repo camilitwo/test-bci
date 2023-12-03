@@ -24,11 +24,11 @@ public class User {
     private String id;
     private Date created;
     private Date lastLogin;
-    private String token;
     private Boolean isActive;
     private String name;
     private String email;
     private String password;
+    private String token;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "phone_id")

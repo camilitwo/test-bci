@@ -32,10 +32,9 @@ import java.util.Set;
 @UserValidation
 public class UserRequestDTO {
   private String name;
-
   private String email;
   private String password;
-
-  private Set<PhoneDTO> phones = null;
+  private String token;
+  private List<PhoneDTO> phones = null;
 }
 

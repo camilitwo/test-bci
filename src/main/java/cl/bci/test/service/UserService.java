@@ -7,7 +7,5 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface UserService {
-    ResponseEntity<UserResponseDTO> saveUser(UserRequestDTO userRequestDTO);
-
-    List<UserResponseDTO> getUsers();
+    ResponseEntity<UserResponseDTO> saveUser(UserRequestDTO userRequestDTO, String authorizationHeader);
 }

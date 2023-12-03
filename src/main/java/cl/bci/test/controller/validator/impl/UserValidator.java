@@ -42,6 +42,16 @@ public class UserValidator implements ConstraintValidator<UserValidation, UserRe
         if (StringUtils.isBlank(userRequestDTO.getPassword())) {
             isValid = false;
             addConstraintViolation(context, "password", "password es requerido");
+        }else{
+            if(!userRequestDTO.getPassword().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$")){
+                isValid = false;
+                addConstraintViolation(context, "password", "password no cumple con el formato requerido");
+            }
+        }
+
+        if(userRequestDTO.getPhones() == null || userRequestDTO.getPhones().isEmpty()) {
+            isValid = false;
+            addConstraintViolation(context, "phones", "Lista de teléfonos es requerida");
         }
 
         return isValid;

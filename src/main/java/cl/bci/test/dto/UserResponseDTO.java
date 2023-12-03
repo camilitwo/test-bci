@@ -20,7 +20,7 @@ public class UserResponseDTO {
     private String password;
     private Date created;
     private Date lastLogin;
-    private String token;
     private Boolean isActive;
+    private String token;
     private List<PhoneDTO> Phones;
 }
