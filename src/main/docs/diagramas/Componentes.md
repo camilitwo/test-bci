@@ -22,11 +22,12 @@ graph TD
     C -->|Enviar token al usuario| A
 
     A -->|Envía solicitud de registro| B
+    B -->|Retorna información de solicitud| A
     B -->|Validar y almacenar usuario| F
     F -->|Guardar usuario en la base de datos| G
     G -->|Responder con información del usuario| B
-    B -->|Manejar excepciones globales| H
-    C -->|Manejar excepciones globales| H
+    H -->|Manejar excepciones globales| B
+    H -->|Manejar excepciones globales| C
     F -->|Manejar excepciones globales| H
 
 ```
