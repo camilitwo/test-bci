@@ -14,4 +14,14 @@ graph TD
     E -->|3. Guardar usuario en la base de datos| F[UserRepository]
     F -->|4. Responder con información del usuario| D
 
+    G[GlobalExceptionHandler]
+
+    style G fill:#f9f,stroke:#333,stroke-width:2px;
+    style G round:8px;
+
+    B -->|Llama a| E
+    C -->|Utiliza| D
+    E -->|Utiliza| F
+    E -->|Utiliza| G
+    G -->|Envía respuesta| B
 ```
