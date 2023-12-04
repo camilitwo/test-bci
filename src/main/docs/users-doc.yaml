@@ -14,6 +14,7 @@ paths:
       summary: Creacion de usuario
       description: Servicio para crear un usuario
       operationId: createUser
+
       requestBody:
         content:
           application/json:
@@ -38,6 +39,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemResponseDTO'
+      security:
+        - bearerAuth: []
 
 components:
   schemas:
@@ -75,5 +78,10 @@ components:
         mensaje:
           type: string
           description: Mensaje de error
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
 
   
