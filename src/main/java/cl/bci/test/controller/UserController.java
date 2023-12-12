@@ -18,11 +18,14 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
 @Api(tags = "User")
 public class UserController {
 
     private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     @ApiOperation(value = "Endpoint para almacenar usuarios en base de datos", notes = "Save user", tags = {

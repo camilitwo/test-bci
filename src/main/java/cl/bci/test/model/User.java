@@ -31,7 +31,7 @@ public class User {
     private String token;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "phone_id")
+    @JoinColumn(name = "user_id")
     private List<Phone> phones = new ArrayList<>();
 
 }

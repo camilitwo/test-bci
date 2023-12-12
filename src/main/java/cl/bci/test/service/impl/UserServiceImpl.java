@@ -1,6 +1,5 @@
 package cl.bci.test.service.impl;
 
-import Util.PasswordEncryption;
 import cl.bci.test.dto.UserRequestDTO;
 import cl.bci.test.dto.UserResponseDTO;
 import cl.bci.test.exception.ProblemException;
@@ -8,13 +7,10 @@ import cl.bci.test.model.Phone;
 import cl.bci.test.model.User;
 import cl.bci.test.repository.UserRepository;
 import cl.bci.test.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,18 +18,23 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public ResponseEntity<UserResponseDTO> saveUser(UserRequestDTO userRequestDTO, String authorizationHeader) {
         CompletableFuture<UserResponseDTO> userResponseDTOCompletableFuture = CompletableFuture
                 .supplyAsync(() -> buildUserFromRequest(userRequestDTO, authorizationHeader))
                 .thenApplyAsync(user -> {
                     userExist(user);
-                    user.setPassword(PasswordEncryption.encrypt(user.getPassword()));
+                    user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
                     User savedUser = userRepository.save(user);
                     UserResponseDTO responseDTO = new UserResponseDTO();
                     BeanUtils.copyProperties(savedUser, responseDTO);
